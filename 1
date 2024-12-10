@@ -1,0 +1,90 @@
+
+class Stack:
+    def __init__(self):
+        self.items = []
+
+    def push(self, item):
+        self.items.append(item)
+
+    def pop(self):
+        if not self.is_empty():
+            return self.items.pop()
+        return None
+
+    def is_empty(self):
+        return len(self.items) == 0
+
+    def __str__(self):
+        return str(self.items)
+
+
+class UndoRedo:
+    def __init__(self):
+        self.undo_stack = Stack()
+        self.redo_stack = Stack()
+        self.current_process = [
+            "menjalankan office word"
+            "menjalankan google chrome"
+            "menjalankan visual studio code"
+
+        ]
+
+    def tambah_aksi(self, aksi):
+        self.undo_stack.push(aksi)
+        self.redo_stack = Stack()  # Kosongkan stack redo saat aksi baru ditambahkan
+        print(f"Aksi ditambahkan: {aksi}")
+
+    def undo(self):
+        if not self.undo_stack.is_empty():
+            aksi = self.undo_stack.pop()
+            self.redo_stack.push(aksi)
+            print(f"Undo: {aksi}")
+        else:
+            print("Tidak ada proses sebelumnya untuk di-undo.")
+
+    def redo(self):
+        if not self.redo_stack.is_empty():
+            aksi = self.redo_stack.pop()
+            self.undo_stack.push(aksi)
+            print(f"Redo: {aksi}")
+        else:
+            print("Tidak ada proses setelahnya untuk di-redo.")
+
+    def lihat_stack(self):
+        print(f"Stack Undo: {self.undo_stack}")
+        print(f"Stack Redo: {self.redo_stack}")
+
+    def jalankan(self):
+        # Menampilkan proses awal
+        print("Proses awal:")
+        for proses in self.current_process:
+            print(proses)
+
+        while True:
+            print("\nMenu:")
+            print("1. Tambah aksi")
+            print("2. Undo")
+            print("3. Redo")
+            print("4. Lihat stack undo dan redo")
+            print("5. Keluar")
+            pilihan = input("Pilih opsi (1-5): ")
+
+            if pilihan == '1':
+                aksi = input("Masukkan aksi yang ingin ditambahkan: ")
+                self.tambah_aksi(aksi)
+            elif pilihan == '2':
+                self.undo()
+            elif pilihan == '3':
+                self.redo()
+            elif pilihan == '4':
+                self.lihat_stack()
+            elif pilihan == '5':
+                print("Keluar dari program.")
+                break
+            else:
+                print("Pilihan tidak valid. Silakan coba lagi.")
+
+
+if __name__ == "__main__":
+    sistem_undo_redo = UndoRedo()
+    sistem_undo_redo.jalankan()
